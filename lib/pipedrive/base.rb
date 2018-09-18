@@ -16,7 +16,8 @@ module Pipedrive
 
     include HTTParty
     
-    base_uri 'api.pipedrive.com/v1'
+    # base_uri 'api.pipedrive.com/v1'
+    base_uri 'https://api.pipedrive.com/v1'
     headers HEADERS
     format :json
 
@@ -54,6 +55,17 @@ module Pipedrive
       if res.success?
         res['data'] = Hash[res['data'].map {|k, v| [k.to_sym, v] }]
         @table.merge!(res['data'])
+      else
+        # binding.pry
+        # false
+        res
+      end
+    end
+
+    def destroy
+      res = delete "#{resource_path}/#{id}"
+      if res.success?
+        @table.merge!(res)
       else
         false
       end
